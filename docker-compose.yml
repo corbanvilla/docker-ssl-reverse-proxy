@@ -3,6 +3,7 @@ version: '3.5'
 volumes:
   letsencrypt-data:
   letsencrypt-acme:
+  nginx-conf:
 
 services: 
   certbot:
@@ -33,6 +34,7 @@ services:
     volumes:
      - letsencrypt-data:/etc/letsencrypt:ro
      - letsencrypt-acme:/etc/certbot:ro
+     - nginx-conf:/etc/nginx/conf.d
 
 networks:
   default:
