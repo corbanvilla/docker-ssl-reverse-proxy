@@ -1,0 +1,40 @@
+version: '3.5'
+
+volumes:
+  letsencrypt-data:
+  letsencrypt-acme:
+
+services: 
+  certbot:
+    build: ./certbot
+    restart: always
+    container_name: ctfd_certbot
+    environment:
+     - email=<example-email>@<example>.com
+     - domains=<example.com>
+     - staging=false
+    volumes:
+     - letsencrypt-data:/etc/letsencrypt/
+     - letsencrypt-acme:/usr/share/nginx/html
+    depends_on:
+     - nginx
+ 
+  nginx:
+    build: ./nginx
+    restart: always
+    container_name: ctfd_nginx
+    environment:
+      - domains=<example>.com
+      - endpoint_container=<container_name>
+      - endpoint_container_port=<container_port>
+    ports:
+     - "80:80"
+     - "443:443"
+    volumes:
+     - letsencrypt-data:/etc/letsencrypt:ro
+     - letsencrypt-acme:/etc/certbot:ro
+
+networks:
+  default:
+    external:
+      name: <network to attach to>

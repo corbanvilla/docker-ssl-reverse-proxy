@@ -1,0 +1,2 @@
+#attempt to renew certificates at 1:00 AM every day
+0 1 * * * certbot renew

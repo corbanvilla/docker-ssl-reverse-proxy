@@ -1,0 +1,41 @@
+version: '3.5'
+
+volumes:
+  letsencrypt-data:
+  letsencrypt-acme:
+
+services: 
+  certbot:
+    build: ./certbot
+    restart: always
+    container_name: ctfd_certbot
+    environment:
+     - email=me@gmail.com
+     - domains=openwest.org
+     - staging=false
+    volumes:
+     - letsencrypt-data:/etc/letsencrypt/
+     - letsencrypt-acme:/usr/share/nginx/html
+    depends_on:
+     - nginx
+ 
+  nginx:
+    build: ./nginx
+    restart: always
+    container_name: ctfd_nginx
+    environment:
+      - domains=openwest.org
+      - endpoint_container=nginx
+      - endpoint_container_port=80
+
+    ports:
+     - "80:80"
+     - "443:443"
+    volumes:
+     - letsencrypt-data:/etc/letsencrypt:ro
+     - letsencrypt-acme:/etc/certbot:ro
+
+networks:
+  default:
+    external:
+      name: webpage_network
