@@ -4,6 +4,7 @@ volumes:
   letsencrypt-data:
   letsencrypt-acme:
   nginx-conf:
+  nginx-ssl-options:
 
 services: 
   certbot:
@@ -36,6 +37,7 @@ services:
      - letsencrypt-data:/etc/letsencrypt:ro
      - letsencrypt-acme:/etc/certbot:ro
      - nginx-conf:/etc/nginx/conf.d
+     - nginx-ssl-options:/assets
 
 networks:
   default:
